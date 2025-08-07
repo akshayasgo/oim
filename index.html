@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>Cosmic Flipbook</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -12,24 +12,24 @@
             padding: 0;
         }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-body {
-    width: 100%;
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.5rem;
-    background-image: linear-gradient(180deg, rgba(0, 50, 50, 0.7), rgba(50, 0, 100, 0.7), rgba(0, 100, 50, 0.7)), url('./assets/aurora.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #d1d5db;
-    margin: 0;
-    overflow-x: hidden;
-}
-
+        body {
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.5rem;
+            background-image: linear-gradient(180deg, rgba(0, 50, 50, 0.7), rgba(50, 0, 100, 0.7), rgba(0, 100, 50, 0.7)), url('./assets/aurora.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #d1d5db;
+            margin: 0;
+            overflow-x: auto;
+            min-width: 1024px; /* Enforce desktop-like width */
+        }
         a {
             text-decoration: none;
             color: inherit;
@@ -257,6 +257,53 @@ body {
                 opacity: 1;
             }
         }
+        /* Desktop Mode Prompt Styles */
+        .desktop-mode-prompt {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .desktop-mode-prompt.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .desktop-mode-content {
+            background: linear-gradient(145deg, #e0f2fe, #fff);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 90%;
+            text-align: center;
+            color: #1f2937;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
+        }
+        .desktop-mode-content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .desktop-mode-content button {
+            background-color: #374151;
+            color: #d1d5db;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .desktop-mode-content button:hover {
+            background-color: #4b5563;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -342,9 +389,6 @@ body {
 
                         <p><strong>Not just a memory, but a part,</strong><br>
                         Forever rooted in the heart.</p>
-
-                    </div>
-
                     </div>
                 </div>
             </div>
@@ -454,7 +498,7 @@ body {
                     <div class="page-content">
                         <h2 class="text-lg font-semibold">Happy Birthday</h2>
                         <p>Once again "Happy Birthday"! On this special day, I truly wish that Kanha ji fills your life with endless joy, strength, and serenity. May all your dreams find their path, and may your heart always be full — with love, laughter, and everything you ever wished for.</p>
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIGV9pyyLDrXQvuIwzx8Oo9dk__r53RvM_mw&s" alt="A cosmic spark">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:9GcRIGV9pyyLDrXQvuIwzx8Oo9dk__r53RvM_mw&s" alt="A cosmic spark">
                     </div>
                 </div>
             </div>
@@ -503,7 +547,6 @@ body {
                             Not every path is clear or planned,
                             But I’ll walk with you — dream in hand. 🌠
                         </p>
-
                         <img src="https://media.istockphoto.com/id/1432517623/photo/message-in-a-bottle-floating-on-the-ocean-waves.jpg?s=612x612&w=0&k=20&c=8e1D35b1sNv93MjAcAoCodajt36_wIvYByhvS-VLxt0=" alt="A cosmic horizon">
                     </div>
                 </div>
@@ -523,10 +566,9 @@ body {
             <div class="back_cover flex flex-col justify-center items-center text-center">
                 <p class="text-2xl font-bold">That was it from me</p>
                 <p class="mt-4 text-sm opacity-80">Thank you for reading, and Happy brithday again!</p>
-  🎵 <a href="https://www.youtube.com/watch?v=KMK6-OPGMcg&list=PL_EBheJYEHsncpmoJzC3AWfrsS58wHOxr" target="_blank">
-    👉 Here is a small playlist for you when you have time
-  </a>
-
+                🎵 <a href="https://www.youtube.com/watch?v=KMK6-OPGMcg&list=PL_EBheJYEHsncpmoJzC3AWfrsS58wHOxr" target="_blank">
+                    👉 Here is a small playlist for you when you have time
+                </a>
             </div>
         </div>
     </main>
@@ -541,8 +583,15 @@ body {
             </div>
         </div>
     </div>
+    <!-- Desktop Mode Prompt Overlay -->
+    <div id="desktop-mode-prompt" class="desktop-mode-prompt">
+        <div class="desktop-mode-content">
+            <p>For the best experience, please enable <strong>Desktop Mode</strong> in your mobile browser. Look for "Desktop Site" or "Request Desktop Site" in your browser's menu (usually three dots or settings).</p>
+            <button id="dismiss-prompt">Continue Anyway</button>
+        </div>
+    </div>
     <script>
-        // Passcode Logic and Navigation
+        // Existing Flipbook and Passcode Logic
         document.addEventListener('DOMContentLoaded', () => {
             const passcodeInput = document.getElementById('passcode-input');
             const submitButton = document.getElementById('submit-passcode');
@@ -641,8 +690,25 @@ body {
                     }
                 };
             });
+
+            // Desktop Mode Prompt Logic
+            const desktopModePrompt = document.getElementById('desktop-mode-prompt');
+            const dismissPromptButton = document.getElementById('dismiss-prompt');
+
+            // Detect mobile device (based on screen width or user agent)
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+            if (isMobile) {
+                desktopModePrompt.classList.add('show');
+            }
+
+            dismissPromptButton.addEventListener('click', () => {
+                desktopModePrompt.classList.remove('show');
+                setTimeout(() => {
+                    desktopModePrompt.style.display = 'none';
+                }, 500); // Match transition duration
+            });
         });
- 
     </script>
 </body>
 </html>
