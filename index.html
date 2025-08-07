@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Flipbook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+body {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.5rem;
+    background-image: linear-gradient(180deg, rgba(0, 50, 50, 0.7), rgba(50, 0, 100, 0.7), rgba(0, 100, 50, 0.7)), url('./assets/aurora.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #d1d5db;
+    margin: 0;
+    overflow-x: hidden;
+    zoom: 1.5;  /* keep this */
+}
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        input[type="checkbox"] {
+            display: none;
+        }
+        #flip_book {
+            width: 300px;
+            height: 450px;
+            position: relative;
+            transition: transform 1s;
+            perspective: 2000px;
+        }
+        .front_cover,
+        .back_cover {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            background: radial-gradient(circle, #1a1a4a, #0a0a23);
+            color: #e6e6fa;
+            padding: 2rem;
+            background-size: cover;
+            background-position: center;
+        }
+        .front_cover h1, .back_cover h1 {
+            font-size: 40px;
+            color: #e6e6fa;
+        }
+        .front_cover {
+            cursor: pointer;
+            transform-origin: center left;
+            transition: transform 0.5s;
+            z-index: 99;
+        }
+        .front_cover label {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .page {
+            width: 288px;
+            height: 432px;
+            position: absolute;
+            top: 9px;
+            left: 6px;
+            border-radius: 0 8px 8px 0;
+            background-color: #ffffff;
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transform: rotateY(0deg);
+            transition-duration: 0.5s;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .front_page,
+        .back_page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 1.5rem;
+            color: #374151;
+            background-color: #ffffff;
+        }
+        .back_page {
+            transform: rotateY(180deg);
+            z-index: 100;
+        }
+        .front_page label, .back_page label {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+        }
+        #go-back-btn {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 1rem;
+            background-color: #374151;
+            color: #d1d5db;
+            border: none;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: background-color 0.2s, transform 0.2s;
+            z-index: 200;
+        }
+        #go-back-btn:hover {
+            background-color: #4b5563;
+            transform: translateX(-50%) scale(1.05);
+        }
+        .page-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            text-align: center;
+            z-index: 5;
+            font-size: 1rem;
+            color: #374151;
+            overflow-y: auto;
+            background-color: #ffffff;
+        }
+        .page-content p {
+            margin: 0;
+            line-height: 1.5;
+            font-size: 0.875rem;
+        }
+        .page-content h2 {
+            color: #1a237e;
+        }
+        .page-content img {
+            max-width: 100%;
+            max-height: 45%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .back_cover {
+            position: relative;
+            z-index: -1;
+            background: radial-gradient(circle, #1a1a4a, #0a0a23);
+            color: #e6e6fa;
+        }
+        #page1 { z-index: 10; }
+        #page2 { z-index: 9; }
+        #page3 { z-index: 8; }
+        #page4 { z-index: 7; }
+        #page5 { z-index: 6; }
+        #page6 { z-index: 5; }
+        #page7 { z-index: 4; }
+        #page8 { z-index: 3; }
+        #page9 { z-index: 2; }
+        #page10 { z-index: 1; }
+        #cover_checkbox:checked ~ #flip_book {
+            transform: translateX(150px);
+        }
+        #cover_checkbox:checked ~ #flip_book .front_cover {
+            transform: rotateY(-180deg);
+            transition: transform 1.5s, z-index 0.5s 0.5s;
+            z-index: 1;
+        }
+        #page1_checkbox:checked ~ #flip_book #page1 { transform: rotateY(-180deg); z-index: 11; }
+        #page2_checkbox:checked ~ #flip_book #page2 { transform: rotateY(-180deg); z-index: 12; }
+        #page3_checkbox:checked ~ #flip_book #page3 { transform: rotateY(-180deg); z-index: 13; }
+        #page4_checkbox:checked ~ #flip_book #page4 { transform: rotateY(-180deg); z-index: 14; }
+        #page5_checkbox:checked ~ #flip_book #page5 { transform: rotateY(-180deg); z-index: 15; }
+        #page6_checkbox:checked ~ #flip_book #page6 { transform: rotateY(-180deg); z-index: 16; }
+        #page7_checkbox:checked ~ #flip_book #page7 { transform: rotateY(-180deg); z-index: 17; }
+        #page8_checkbox:checked ~ #flip_book #page8 { transform: rotateY(-180deg); z-index: 18; }
+        #page9_checkbox:checked ~ #flip_book #page9 { transform: rotateY(-180deg); z-index: 19; }
+        #page10_checkbox:checked ~ #flip_book #page10 { transform: rotateY(-180deg); z-index: 20; }
+        @media (max-width: 768px) {
+            #flip_book {
+                width: 250px;
+                height: 375px;
+            }
+            .page {
+                width: 238px;
+                height: 357px;
+                top: 9px;
+                left: 6px;
+            }
+            .front_cover, .back_cover {
+                padding: 1rem;
+            }
+        }
+        .gift-page-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 1000;
+        }
+        .gift-page-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .gift-page-content {
+            background: linear-gradient(145deg, #e0f2fe, #fff);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            max-width: 500px;
+            text-align: center;
+            color: #1f2937;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+        @keyframes fadeInScale {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <input type="checkbox" id="cover_checkbox" class="hidden">
+        <input type="checkbox" id="page1_checkbox" class="hidden">
+        <input type="checkbox" id="page2_checkbox" class="hidden">
+        <input type="checkbox" id="page3_checkbox" class="hidden">
+        <input type="checkbox" id="page4_checkbox" class="hidden">
+        <input type="checkbox" id="page5_checkbox" class="hidden">
+        <input type="checkbox" id="page6_checkbox" class="hidden">
+        <input type="checkbox" id="page7_checkbox" class="hidden">
+        <input type="checkbox" id="page8_checkbox" class="hidden">
+        <input type="checkbox" id="page9_checkbox" class="hidden">
+        <input type="checkbox" id="page10_checkbox" class="hidden">
+
+        <div id="flip_book">
+            <div class="front_cover flex flex-col justify-center items-center text-center">
+                <label for="cover_checkbox" id="cover" class="absolute top-0 left-0 w-full h-full cursor-pointer"></label>
+                <h3 class="text-3xl font-bold tracking-wide">Happy Birthday to One In Million 🎉💫</h3>
+                <p class="text-sm mt-2 opacity-80">Wishing you endless joy, success & sparkle ✨💗</p>
+            </div>
+            <div class="page" id="page1">
+                <div class="front_page">
+                    <label for="page1_checkbox"></label>
+                    <div class="page-content">
+                        <p>Happy Birthday to my mirror image and one in a million — unstoppable, one of a kind, and effortlessly inspiring. 🌟💫 Your future’s shining, your spirit’s rare, and to me, you’ll always be extraordinary. 💖🎂✨</p>
+                        <img src="page2.webp" alt="A vibrant cosmic nebula">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page1_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">DREAMS✨</h2>
+                        <p>Some people dream of places, but a few carry those dreams in their eyes. 🌍 From stargazing in Norway to walking under cherry blossoms — we dream similar skies. 🌌 It’s rare. And honestly, kind of cool. ✨ I hope both our passports get stamped soon. 🛫📸</p>
+                        <img src="248830-worldtour.webp" alt="A distant swirling galaxy">
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page2">
+                <div class="front_page">
+                    <label for="page2_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Hello World, Bye Logic 👋💻</h2>
+                        <p>Not all coders write clean code — some just ctrl + c / ctrl + v with ✨confidence✨. 💻😂 You're not bad at coding… you're just creatively allergic to bugs. 🐛🔥 But hey, stack overflow is free, and Google still believes in you. 🧠🔍 One day you’ll fix a bug on the first try — and the universe will glitch. 💥🚀</p>
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page2_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Coder, Music Queen 🎧</h2>
+                        <img src="page3.jpg" alt="An abstract cosmic glow">
+                        <p>You don’t code (yet), but your playlists already debug moods, one day you’ll write code that crashes — but with style, and headphones still on. 🎧💻🔥😎✨</p>
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page3">
+                <div class="front_page">
+                    <label for="page3_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Grandpa</h2>
+                        <p>There’s something pure in the way you talk about your grandpa. 🕊️
+                            It shows in your values, in your grace, and in your eyes. 💫
+                            Love like that doesn’t fade — it becomes part of who you are. 🤍
+                            He’d be proud, no doubt about it. 👴🏻🌼
+                        </p>
+                        <img src="https://png.pngtree.com/background/20250205/original/pngtree-artistic-depiction-of-childhood-memories-at-dusk-picture-image_16062180.jpg" alt="A colorful cosmic storm">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page3_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Dadu More Than a Memory</h2>
+                        <div style="font-family: 'Georgia', serif; font-size: 1.2em; line-height: 1.6; padding: 20px; text-align: center; background: #fdfdfd;">
+                        <p><strong>In quiet steps and gentle grace,</strong><br>
+                        You left your love in every place.</p>
+
+                        <p><strong>A guiding hand, a steady light,</strong><br>
+                        Still shining in the darkest night.</p>
+
+                        <p><strong>Though time has taken you afar,</strong><br>
+                        You live in hearts for who you are.</p>
+
+                        <p><strong>Not just a memory, but a part,</strong><br>
+                        Forever rooted in the heart.</p>
+
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page4">
+                <div class="front_page">
+                    <label for="page4_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">If Dadu Could Speak..</h2>
+                              <p style="font-family: Georgia, serif; font-size: 16px; line-height: 1.5; text-align: justify; margin-top: 15px;">
+                                “Happy BirthDay and Stop crying, silly child — I’m not that easy to get rid of!<br>
+                                I’m still in your favorite song, that awkward tea you make,<br>
+                                “You think I’m not watching when you talk to the stars like they’re me? I hear it all<br>
+                                “I may not be around to scold or spoil you,<br>
+                                but I’m always here — in your giggle, and your goodness.”<br><br>
+                        </p>
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page4_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Anime Lover</h2>
+                        <p>
+                            I know anime isn’t just a show to you.
+                            it’s your quiet space when life gets too loud.
+                            You see meaning where others see motion,
+                            feel stories like they were written for you.
+                            The characters speak when you can’t,
+                            and fight when you feel tired.
+                            They remind you you're not alone.
+                            And maybe… that’s why we connect the way we do.
+                            There’s depth in you — the kind most miss.
+                            And I’m lucky I get to see it.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page5">
+                <div class="front_page">
+                    <label for="page5_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Debugs the World</h2>
+                        <p>
+                            You chose your dream, even when it was hard.
+                            “If you don’t fight, you can’t win.” --Eren Yeage<br>
+                            You’ve chosen a path not everyone dares to take a world of logic, code, and creation.<br>
+                            “No one knows what the outcome will be. So, choose whatever you'll regret the least.”— Levi Ackerman<br>
+                        </p>
+                        <img src="https://static1.srcdn.com/wordpress/wp-content/uploads/2025/04/attack-on-titan-no-regrets-levi-ackerman-poster.jpg" alt="A glowing supernova">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page5_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">More Than Just Songs</h2>
+                        <p>Your music taste is something else — thoughtful, emotional, and always on point. You don’t just follow trends; you send songs that stay with me. I admire how you connect to every lyric like it’s a story you already understand.</p>
+                        <img src="https://www.davjalandhar.com/wp-content/uploads/2022/08/music.jpg" alt="A colorful planetary orbit">
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page6">
+                <div class="front_page">
+                    <label for="page6_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Dream Destinations</h2>
+                        <p>Some places feel like they’re calling you quietly: Norway, Japan, Finland, the Northern Lights. You never saw them as just tourist spots but as living stories. And if dreams ever take us there, I’d always choose your version of the world.</p>
+                        <img src="https://images.saymedia-content.com/.image/t_share/MTc2Mjk3ODI0MTY0NTg2Njg2/a-dream-destination-japan.jpg" alt="A radiant pulsar">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page6_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Aurora & Us</h2>
+                        <p>The aurora is a quiet miracle, just like the way you talk about your dreams. It’s not about going everywhere, just somewhere that feels right. If dreams are doors, I hope you open every one. And maybe, I’ll walk through a few with you.</p>
+                        <img src="https://img.freepik.com/premium-photo/couple-watching-northern-lights-by-lake_260899-10675.jpg?w=360" alt="A glowing nebula">
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page7">
+                <div class="front_page">
+                    <label for="page7_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Curious Minds, Alike</h2>
+                        <p>I thought I was the only one who got excited over science and asked “why” just for fun — until you proved me wrong. You’ve got that same spark, same curiosity. Another reason I call you my mirror image. 😄</p>
+                        <img src="https://www.oecd.org/adobe/dynamicmedia/deliver/dm-aid--81da1bba-5e45-46df-9741-33c6113a84d1/a8d820bd-en.jpg?preferwebp=true&quality=80" alt="A glowing nebula">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page7_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Sky Full of stars </h2>
+                        <p>You don’t just admire stars — you connect with them, like they speak to the quiet in you. I’ve always felt drawn to the sky too, maybe that’s why we feel alike in ways that are hard to explain. And maybe one day, somewhere under a sky where the Milky Way spills across the dark, we’ll be there, just watching — silent, but understood.</p>
+                        <img src="https://t3.ftcdn.net/jpg/02/89/18/72/360_F_289187251_mntcMQqg3pqHY6P8Dm8e9Hj8Mu9tAuWn.jpg" alt="A starry trail">
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page8">
+                <div class="front_page">
+                    <label for="page8_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Kanha Ji</h2>
+                        <p>There’s something quietly beautiful in your faith in Kanha ji — not loud, just deeply felt. It shows in how you speak, how you care, how calm you stay. It’s a part of you I truly admire… peaceful, steady, and kind.</p>
+                        <img src="https://i.pinimg.com/736x/c7/df/b8/c7dfb85a74cec2340b7ac9f36e804a65.jpg" alt="A cosmic spark">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page8_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Happy Birthday</h2>
+                        <p>Once again "Happy Birthday"! On this special day, I truly wish that Kanha ji fills your life with endless joy, strength, and serenity. May all your dreams find their path, and may your heart always be full — with love, laughter, and everything you ever wished for.</p>
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIGV9pyyLDrXQvuIwzx8Oo9dk__r53RvM_mw&s" alt="A cosmic spark">
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page9">
+                <div class="front_page">
+                    <label for="page9_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">Shared Roads</h2>
+                        <p>
+                            You say solo travel feeds the soul,<br>
+                            And I agree, it makes us whole.<br>
+                            But even the strongest walk feels light<br>
+                            With someone to share the sight.<br>
+                            Some paths deserve a silent friend,<br>
+                            To witness stories till they end. 🌌
+                        </p>
+                        <img src="https://img.freepik.com/free-photo/couple-family-traveling-together_1150-7772.jpg" alt="An aurora-inspired scene">
+                    </div>
+                </div>
+                <div class="back_page">
+                    <label for="page9_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">In Another Chapter</h2>
+                        <p>
+                            Maybe not this year, or the next one too,
+                            But someday, somewhere,me and you.<br>
+                            Where snowflakes fall and the auroras gleam,
+                            We’ll stand inside our shared old dream.
+                            Some journeys wait for stars to align
+                            And maybe that’s fine. ❄️
+                        </p>
+                        <img src="https://www.gobeepbeep.com/wp-content/uploads/2018/01/Couple-Northern-Lights-Trip-to-Norway-with-Gobeepbeep.com_-e1515062057535.jpg" alt="An aurora-inspired scene">
+                    </div>
+                </div>
+            </div>
+            <div class="page" id="page10">
+                <div class="front_page">
+                    <label for="page10_checkbox"></label>
+                    <div class="page-content">
+                        <h2 class="text-lg font-semibold">"Beginning"</h2>
+                        <p>
+                            Today is just one page — but not the last.
+                            There’s more to write, more skies to cast.
+                            I hope this little book stays near,
+                            A dream we shaped, held gently here.<br>
+                            Not every path is clear or planned,
+                            But I’ll walk with you — dream in hand. 🌠
+                        </p>
+
+                        <img src="https://media.istockphoto.com/id/1432517623/photo/message-in-a-bottle-floating-on-the-ocean-waves.jpg?s=612x612&w=0&k=20&c=8e1D35b1sNv93MjAcAoCodajt36_wIvYByhvS-VLxt0=" alt="A cosmic horizon">
+                    </div>
+                </div>
+                <div class="back_page relative">
+                    <div class="page-content flex flex-col justify-center items-center p-4">
+                        <h2 class="text-lg font-semibold">Surprise Gift for you </h2>
+                        <p class="mb-4">Enter Your Name For A Surprise!</p>
+                        <input type="password" id="passcode-input" class="border border-gray-300 rounded-md p-2 text-center w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-sm" placeholder="Passcode">
+                        <button id="submit-passcode" class="mt-4 bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                            Submit
+                        </button>
+                        <p id="passcode-message" class="mt-4 text-red-500 font-semibold"></p>
+                    </div>
+                    <button id="go-back-btn">Go Back</button>
+                </div>
+            </div>
+            <div class="back_cover flex flex-col justify-center items-center text-center">
+                <p class="text-2xl font-bold">That was it from me</p>
+                <p class="mt-4 text-sm opacity-80">Thank you for reading, and Happy brithday again!</p>
+  🎵 <a href="https://www.youtube.com/watch?v=KMK6-OPGMcg&list=PL_EBheJYEHsncpmoJzC3AWfrsS58wHOxr" target="_blank">
+    👉 Here is a small playlist for you when you have time
+  </a>
+
+            </div>
+        </div>
+    </main>
+    <div id="gift-page" class="gift-page-overlay">
+        <div class="gift-page-content text-center">
+            <h1 class="text-4xl font-extrabold text-blue-800 mb-4 animate-bounce">🎉 Happy Birthday! 🎉</h1>
+            <p class="text-lg mb-6">Below is your Myntra gift card code and details to redeem it.</p>
+            <div class="bg-white p-6 rounded-lg border-2 border-dashed border-blue-400">
+                <p class="text-gray-600 text-sm">Myntra Gift Card Code is Below:</p>
+                <img src="images/giftc.png" alt="A cosmic horizon">
+                <p class="text-sm text-gray-500 mt-4">How to Redeem find the instructiosns <a href="https://dealzy.app/blog/how-to-redeem-your-myntra-gift-card-a-step-by-step-guide?blog_id=12" target="_blank" class="text-blue-500 underline">Myntra.com/gc/redeem</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Passcode Logic and Navigation
+        document.addEventListener('DOMContentLoaded', () => {
+            const passcodeInput = document.getElementById('passcode-input');
+            const submitButton = document.getElementById('submit-passcode');
+            const messageElement = document.getElementById('passcode-message');
+            const giftPage = document.getElementById('gift-page');
+            const goBackButton = document.getElementById('go-back-btn');
+
+            // Touch and click support for page turning
+            const flipBook = document.getElementById('flip_book');
+            let startX = 0;
+            let currentPage = 0;
+            const checkboxes = [
+                'cover_checkbox',
+                'page1_checkbox',
+                'page2_checkbox',
+                'page3_checkbox',
+                'page4_checkbox',
+                'page5_checkbox',
+                'page6_checkbox',
+                'page7_checkbox',
+                'page8_checkbox',
+                'page9_checkbox',
+                'page10_checkbox'
+            ];
+
+            flipBook.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+
+            flipBook.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].clientX;
+                const deltaX = endX - startX;
+                if (Math.abs(deltaX) > 50) {
+                    if (deltaX < 0 && currentPage < checkboxes.length - 1) {
+                        document.getElementById(checkboxes[currentPage]).checked = true;
+                        currentPage++;
+                    } else if (deltaX > 0 && currentPage > 0) {
+                        document.getElementById(checkboxes[currentPage - 1]).checked = false;
+                        currentPage--;
+                    }
+                }
+            });
+
+            checkboxes.forEach((id, index) => {
+                const checkbox = document.getElementById(id);
+                checkbox.addEventListener('change', () => {
+                    currentPage = index;
+                    for (let i = index + 1; i < checkboxes.length; i++) {
+                        document.getElementById(checkboxes[i]).checked = false;
+                    }
+                });
+            });
+
+            // Go Back Button Logic
+            if (goBackButton) {
+                goBackButton.addEventListener('click', () => {
+                    const page10Checkbox = document.getElementById('page10_checkbox');
+                    if (page10Checkbox) {
+                        page10Checkbox.checked = false;
+                        currentPage = Math.max(0, currentPage - 1);
+                    }
+                });
+            }
+
+            // Passcode Logic
+            const correctCode = 'one_in_million';
+            submitButton.addEventListener('click', () => {
+                const enteredCode = passcodeInput.value.trim();
+                if (enteredCode === correctCode) {
+                    messageElement.textContent = '';
+                    giftPage.classList.add('show');
+                } else {
+                    messageElement.textContent = 'Incorrect code. Try again for your gift! Here is hint try one_**_m******';
+                }
+            });
+
+            passcodeInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    submitButton.click();
+                }
+            });
+
+            // Image fallback handler
+            const images = document.querySelectorAll('.page-content img');
+            images.forEach(img => {
+                img.onerror = () => {
+                    const parent = img.parentElement;
+                    if (parent) {
+                        parent.innerHTML = `Image not found: ${img.alt}`;
+                        parent.style.display = 'flex';
+                        parent.style.justifyContent = 'center';
+                        parent.style.alignItems = 'center';
+                        parent.style.fontSize = '0.875rem';
+                        parent.style.color = '#374151';
+                    }
+                };
+            });
+        });
+  // 🔒 Prevent zoom via Ctrl +/-, Ctrl + mouse wheel
+  document.addEventListener('touchmove', function (e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent double-tap to zoom
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function (e) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
+
+  // Prevent zoom using Ctrl + wheel (desktop)
+  window.addEventListener('wheel', function (e) {
+    if (e.ctrlKey) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent zoom using Ctrl + or - keys
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+    </script>
+</body>
+</html>
