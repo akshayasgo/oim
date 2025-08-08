@@ -28,7 +28,7 @@
             color: #d1d5db;
             margin: 0;
             overflow-x: auto;
-            min-width: 1024px; /* Enforce desktop-like width */
+            min-width: 1024px;
         }
         a {
             text-decoration: none;
@@ -91,8 +91,9 @@
             transform-origin: left;
             transform-style: preserve-3d;
             transform: rotateY(0deg);
-            transition-duration: 0.5s;
+            transition: transform 0.5s ease;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            will-change: transform;
         }
         .front_page,
         .back_page {
@@ -193,16 +194,16 @@
             transition: transform 1.5s, z-index 0.5s 0.5s;
             z-index: 1;
         }
-        #page1_checkbox:checked ~ #flip_book #page1 { transform: rotateY(-180deg); z-index: 11; }
-        #page2_checkbox:checked ~ #flip_book #page2 { transform: rotateY(-180deg); z-index: 12; }
-        #page3_checkbox:checked ~ #flip_book #page3 { transform: rotateY(-180deg); z-index: 13; }
-        #page4_checkbox:checked ~ #flip_book #page4 { transform: rotateY(-180deg); z-index: 14; }
-        #page5_checkbox:checked ~ #flip_book #page5 { transform: rotateY(-180deg); z-index: 15; }
-        #page6_checkbox:checked ~ #flip_book #page6 { transform: rotateY(-180deg); z-index: 16; }
-        #page7_checkbox:checked ~ #flip_book #page7 { transform: rotateY(-180deg); z-index: 17; }
-        #page8_checkbox:checked ~ #flip_book #page8 { transform: rotateY(-180deg); z-index: 18; }
-        #page9_checkbox:checked ~ #flip_book #page9 { transform: rotateY(-180deg); z-index: 19; }
-        #page10_checkbox:checked ~ #flip_book #page10 { transform: rotateY(-180deg); z-index: 20; }
+        #page1_checkbox:checked ~ #flip_book #page1 { transform: rotateY(-180deg); z-index: 11; transition: transform 0.5s ease, z-index 0s; }
+        #page2_checkbox:checked ~ #flip_book #page2 { transform: rotateY(-180deg); z-index: 12; transition: transform 0.5s ease, z-index 0s; }
+        #page3_checkbox:checked ~ #flip_book #page3 { transform: rotateY(-180deg); z-index: 13; transition: transform 0.5s ease, z-index 0s; }
+        #page4_checkbox:checked ~ #flip_book #page4 { transform: rotateY(-180deg); z-index: 14; transition: transform 0.5s ease, z-index 0s; }
+        #page5_checkbox:checked ~ #flip_book #page5 { transform: rotateY(-180deg); z-index: 15; transition: transform 0.5s ease, z-index 0s; }
+        #page6_checkbox:checked ~ #flip_book #page6 { transform: rotateY(-180deg); z-index: 16; transition: transform 0.5s ease, z-index 0s; }
+        #page7_checkbox:checked ~ #flip_book #page7 { transform: rotateY(-180deg); z-index: 17; transition: transform 0.5s ease, z-index 0s; }
+        #page8_checkbox:checked ~ #flip_book #page8 { transform: rotateY(-180deg); z-index: 18; transition: transform 0.5s ease, z-index 0s; }
+        #page9_checkbox:checked ~ #flip_book #page9 { transform: rotateY(-180deg); z-index: 19; transition: transform 0.5s ease, z-index 0s; }
+        #page10_checkbox:checked ~ #flip_book #page10 { transform: rotateY(-180deg); z-index: 20; transition: transform 0.5s ease, z-index 0s; }
         @media (max-width: 768px) {
             #flip_book {
                 width: 250px;
@@ -257,7 +258,6 @@
                 opacity: 1;
             }
         }
-        /* Desktop Mode Prompt Styles */
         .desktop-mode-prompt {
             position: fixed;
             top: 0;
@@ -378,17 +378,15 @@
                     <div class="page-content">
                         <h2 class="text-lg font-semibold">Dadu More Than a Memory</h2>
                         <div style="font-family: 'Georgia', serif; font-size: 1.2em; line-height: 1.6; padding: 20px; text-align: center; background: #fdfdfd;">
-                        <p><strong>In quiet steps and gentle grace,</strong><br>
-                        You left your love in every place.</p>
-
-                        <p><strong>A guiding hand, a steady light,</strong><br>
-                        Still shining in the darkest night.</p>
-
-                        <p><strong>Though time has taken you afar,</strong><br>
-                        You live in hearts for who you are.</p>
-
-                        <p><strong>Not just a memory, but a part,</strong><br>
-                        Forever rooted in the heart.</p>
+                            <p><strong>In quiet steps and gentle grace,</strong><br>
+                            You left your love in every place.</p>
+                            <p><strong>A guiding hand, a steady light,</strong><br>
+                            Still shining in the darkest night.</p>
+                            <p><strong>Though time has taken you afar,</strong><br>
+                            You live in hearts for who you are.</p>
+                            <p><strong>Not just a memory, but a part,</strong><br>
+                            Forever rooted in the heart.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -397,12 +395,12 @@
                     <label for="page4_checkbox"></label>
                     <div class="page-content">
                         <h2 class="text-lg font-semibold">If Dadu Could Speak..</h2>
-                              <p style="font-family: Georgia, serif; font-size: 16px; line-height: 1.5; text-align: justify; margin-top: 15px;">
-                                “Happy BirthDay and Stop crying, silly child — I’m not that easy to get rid of!<br>
-                                I’m still in your favorite song, that awkward tea you make,<br>
-                                “You think I’m not watching when you talk to the stars like they’re me? I hear it all<br>
-                                “I may not be around to scold or spoil you,<br>
-                                but I’m always here — in your giggle, and your goodness.”<br><br>
+                        <p style="font-family: Georgia, serif; font-size: 16px; line-height: 1.5; text-align: justify; margin-top: 15px;">
+                            “Happy BirthDay and Stop crying, silly child — I’m not that easy to get rid of!<br>
+                            I’m still in your favorite song, that awkward tea you make,<br>
+                            “You think I’m not watching when you talk to the stars like they’re me? I hear it all<br>
+                            “I may not be around to scold or spoil you,<br>
+                            but I’m always here — in your giggle, and your goodness.”<br><br>
                         </p>
                     </div>
                 </div>
@@ -524,7 +522,7 @@
                         <h2 class="text-lg font-semibold">In Another Chapter</h2>
                         <p>
                             Maybe not this year, or the next one too,
-                            But someday, somewhere,me and you.<br>
+                            But someday, somewhere, me and you.<br>
                             Where snowflakes fall and the auroras gleam,
                             We’ll stand inside our shared old dream.
                             Some journeys wait for stars to align
@@ -583,7 +581,6 @@
             </div>
         </div>
     </div>
-    <!-- Desktop Mode Prompt Overlay -->
     <div id="desktop-mode-prompt" class="desktop-mode-prompt">
         <div class="desktop-mode-content">
             <p>For the best experience, please enable <strong>Desktop Mode</strong> in your mobile browser. Look for "Desktop Site" or "Request Desktop Site" in your browser's menu (usually three dots or settings).</p>
@@ -591,13 +588,14 @@
         </div>
     </div>
     <script>
-        // Existing Flipbook and Passcode Logic
         document.addEventListener('DOMContentLoaded', () => {
             const passcodeInput = document.getElementById('passcode-input');
             const submitButton = document.getElementById('submit-passcode');
             const messageElement = document.getElementById('passcode-message');
             const giftPage = document.getElementById('gift-page');
             const goBackButton = document.getElementById('go-back-btn');
+            const desktopModePrompt = document.getElementById('desktop-mode-prompt');
+            const dismissPromptButton = document.getElementById('dismiss-prompt');
 
             // Touch and click support for page turning
             const flipBook = document.getElementById('flip_book');
@@ -638,7 +636,8 @@
             checkboxes.forEach((id, index) => {
                 const checkbox = document.getElementById(id);
                 checkbox.addEventListener('change', () => {
-                    currentPage = index;
+                    currentPage = checkbox.checked ? index : Math.max(0, index - 1);
+                    // Reset all subsequent checkboxes to prevent stacking issues
                     for (let i = index + 1; i < checkboxes.length; i++) {
                         document.getElementById(checkboxes[i]).checked = false;
                     }
@@ -692,12 +691,7 @@
             });
 
             // Desktop Mode Prompt Logic
-            const desktopModePrompt = document.getElementById('desktop-mode-prompt');
-            const dismissPromptButton = document.getElementById('dismiss-prompt');
-
-            // Detect mobile device (based on screen width or user agent)
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-
             if (isMobile) {
                 desktopModePrompt.classList.add('show');
             }
@@ -706,7 +700,7 @@
                 desktopModePrompt.classList.remove('show');
                 setTimeout(() => {
                     desktopModePrompt.style.display = 'none';
-                }, 500); // Match transition duration
+                }, 500);
             });
         });
     </script>
